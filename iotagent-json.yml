@@ -1,0 +1,95 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: iotagent-json-deployment
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: iotagent-json
+  template:
+    metadata:
+      labels:
+        app: iotagent-json
+    spec:
+      containers:
+      - name: iotagent-json
+        image: fiware/iotagent-json:1.9.0 #management-sv1:5000/scfw-iotagent-json:2.1.0-R
+#        imagePullPolicy: Never
+        ports:
+        - containerPort: 4041
+          protocol: TCP
+        env:
+        - name: IOTA_MQTT_HOST
+          value: "rabbitmq"
+        - name: IOTA_MQTT_PORT
+          value: "1883"
+        - name: IOTA_MQTT_USERNAME
+          value: "admin"
+        - name: IOTA_MQTT_PASSWORD
+          value: "Sv-q47SPot12"
+        - name: IOTA_LOG_LEVEL
+          value: "INFO"
+        - name: IOTA_TIMESTAMP
+          value: "true"
+        - name: IOTA_CB_HOST
+          value: "orion"
+        - name: IOTA_CB_PORT
+          value: "1026"
+        - name: IOTA_NORTH_PORT
+          value: "4041"
+        - name: IOTA_REGISTRY_TYPE
+          value: "mongodb"
+        - name: IOTA_MONGO_HOST
+          value: "mongo-common"
+        - name: IOTA_MONGO_PORT
+          value: "27017"
+        - name: IOTA_MONGO_DB
+          value: "iotagentjson"
+        - name: IOTA_PROVIDER_URL
+          value: "http://iotagent-json:4041"
+        - name: IOTA_DEFAULT_RESOURCE
+          value: "/iot/json"
+#        volumeMounts:
+#        - mountPath: /nas1/iotagent-json/iotajson
+#          name: persistent-config
+#        - mountPath: /etc/localtime
+#          name: persistent-localtime
+#          readOnly: true
+        livenessProbe:
+          failureThreshold: 3
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          successThreshold: 1
+          tcpSocket:
+            port: 4041
+          timeoutSeconds: 2
+
+#      nodeSelector:
+#        scfw.cluster.id: stdap
+
+#      volumes:
+#      - persistentVolumeClaim:
+#          claimName: nfs-pvc-iotagent-json
+#        name: persistent-config
+#      - hostPath:
+#          path: /etc/localtime
+#          type: FileOrCreate
+#        name: persistent-localtime
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: iotagent-json
+spec:
+  type: ClusterIP
+  ports:
+  - port: 4041
+    name: tcp4041to4041
+    protocol: TCP
+    targetPort: 4041
+  selector:
+    app: iotagent-json
+
