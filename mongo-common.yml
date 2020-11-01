@@ -36,7 +36,7 @@ subjects:
 apiVersion: v1
 kind: Service
 metadata:
-  name: mongo
+  name: mongo-common
   labels:
     name: mongo
 spec:
@@ -50,9 +50,9 @@ spec:
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: mongo
+  name: mongo-common
 spec:
-  serviceName: "mongo"
+  serviceName: "mongo-common"
   replicas: 4
   selector:
     matchLabels:
