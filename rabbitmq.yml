@@ -66,7 +66,8 @@ spec:
     spec:
       containers:
       - name: rabbitmq
-        image: rabbitmq:3.6.6-management-alpine #cyrilix/rabbitmq-mqtt
+        image: avkash08/rabbitmq-mqtt:3.8.9 #rabbitmq:3.6.6-management-alpine
+#        image: avkash08/rabbitmq-mqtt:3.8.9
         lifecycle:
           postStart:
             exec:
@@ -103,15 +104,15 @@ spec:
             cpu: 500m
           requests:
             cpu: 200m
-        livenessProbe:
-          failureThreshold: 3
-          initialDelaySeconds: 10
-          periodSeconds: 10
-          successThreshold: 1
-          tcpSocket:
+#        livenessProbe:
+#          failureThreshold: 3
+#          initialDelaySeconds: 10
+#          periodSeconds: 10
+#          successThreshold: 1
+#          tcpSocket:
 #            port: 1883
-            port: 15672
-          timeoutSeconds: 2
+#            port: 15672
+#          timeoutSeconds: 2
 
 
   volumeClaimTemplates:
