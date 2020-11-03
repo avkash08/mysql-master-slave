@@ -104,15 +104,14 @@ spec:
             cpu: 500m
           requests:
             cpu: 200m
-#        livenessProbe:
-#          failureThreshold: 3
-#          initialDelaySeconds: 10
-#          periodSeconds: 10
-#          successThreshold: 1
-#          tcpSocket:
-#            port: 1883
-#            port: 15672
-#          timeoutSeconds: 2
+        livenessProbe:
+          failureThreshold: 3
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          successThreshold: 1
+          tcpSocket:
+            port: 1883
+          timeoutSeconds: 2
 
 
   volumeClaimTemplates:

@@ -25,10 +25,10 @@ spec:
           value: "rabbitmq"
         - name: IOTA_MQTT_PORT
           value: "1883"
-        - name: IOTA_MQTT_USERNAME
-          value: "admin"
-        - name: IOTA_MQTT_PASSWORD
-          value: "Sv-q47SPot12"
+#        - name: IOTA_MQTT_USERNAME
+#          value: "admin"
+#        - name: IOTA_MQTT_PASSWORD
+#          value: "Sv-q47SPot12"
         - name: IOTA_LOG_LEVEL
           value: "INFO"
         - name: IOTA_TIMESTAMP
