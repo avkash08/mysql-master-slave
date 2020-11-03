@@ -36,7 +36,7 @@ subjects:
 apiVersion: v1
 kind: Service
 metadata:
-  name: mongo-common
+  name: mongo
   labels:
     name: mongo
 spec:
@@ -50,9 +50,9 @@ spec:
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: mongo-common
+  name: mongo
 spec:
-  serviceName: "mongo-common"
+  serviceName: "mongo"
   replicas: 4
   selector:
     matchLabels:
@@ -111,12 +111,12 @@ spec:
 apiVersion: autoscaling/v2beta2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: mongo-common
+  name: mongo
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: statefulset
-    name: mongo-common
+    name: mongo
   minReplicas: 4
   maxReplicas: 6
   metrics:

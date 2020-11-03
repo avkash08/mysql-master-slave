@@ -7,20 +7,20 @@ data:
 
 ---
 
-apiVersion: v1
-kind: Service
-metadata:
-  # Expose the management HTTP port on each node
-  name: rabbitmq-management
-  labels:
-    app: rabbitmq
-spec:
-  ports:
-  - port: 15672
-    name: http
-  selector:
-    app: rabbitmq
-  type: LoadBalancer # NodePort # Or LoadBalancer in production w/ proper security
+#apiVersion: v1
+#kind: Service
+#metadata:
+#  # Expose the management HTTP port on each node
+#  name: rabbitmq-management
+#  labels:
+#    app: rabbitmq
+#spec:
+#  ports:
+#  - port: 15672
+#    name: http
+#  selector:
+#    app: rabbitmq
+#  type: LoadBalancer # NodePort # Or LoadBalancer in production w/ proper security
 
 ---
 

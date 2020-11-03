@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: iotagent-json
-        image: fiware/iotagent-json:1.9.0 #management-sv1:5000/scfw-iotagent-json:2.1.0-R
+        image: fiware/iotagent-json:1.15.0 #management-sv1:5000/scfw-iotagent-json:2.1.0-R
 #        imagePullPolicy: Never
         ports:
         - containerPort: 4041
@@ -42,7 +42,7 @@ spec:
         - name: IOTA_REGISTRY_TYPE
           value: "mongodb"
         - name: IOTA_MONGO_HOST
-          value: "mongo-common"
+          value: "mongo"
         - name: IOTA_MONGO_PORT
           value: "27017"
         - name: IOTA_MONGO_DB
