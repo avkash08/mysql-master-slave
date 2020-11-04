@@ -1,26 +1,37 @@
 apiVersion: v1
 kind: Secret
 metadata:
+  name: rabbitmq-admin
+type: Opaque
+data:
+  user: YWRtaW4=
+  pass: U3YtcTQ3U1BvdDEy
+
+---
+
+apiVersion: v1
+kind: Secret
+metadata:
   name: rabbitmq-config
 data:
   erlang-cookie: cmFiYml0bXEtazhzLURlbTA=
 
 ---
 
-#apiVersion: v1
-#kind: Service
-#metadata:
-#  # Expose the management HTTP port on each node
-#  name: rabbitmq-management
-#  labels:
-#    app: rabbitmq
-#spec:
-#  ports:
-#  - port: 15672
-#    name: http
-#  selector:
-#    app: rabbitmq
-#  type: LoadBalancer # NodePort # Or LoadBalancer in production w/ proper security
+apiVersion: v1
+kind: Service
+metadata:
+  # Expose the management HTTP port on each node
+  name: rabbitmq-management
+  labels:
+    app: rabbitmq
+spec:
+  ports:
+  - port: 15672
+    name: http
+  selector:
+    app: rabbitmq
+  type: LoadBalancer # NodePort # Or LoadBalancer in production w/ proper security
 
 ---
 
@@ -88,6 +99,16 @@ spec:
                 fi;
                 rabbitmqctl set_policy ha-all "." '{"ha-mode":"exactly","ha-params":3,"ha-sync-mode":"automatic"}'
         env:
+        - name: RABBITMQ_DEFAULT_USER
+          valueFrom:
+            secretKeyRef:
+              name: rabbitmq-admin
+              key: user
+        - name: RABBITMQ_DEFAULT_PASS
+          valueFrom:
+            secretKeyRef:
+              name: rabbitmq-admin
+              key: pass
         - name: RABBITMQ_ERLANG_COOKIE
           valueFrom:
             secretKeyRef:
@@ -144,4 +165,5 @@ spec:
       target:
         type: Utilization
         averageUtilization: 75
+
 

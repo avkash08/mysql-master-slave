@@ -4,6 +4,11 @@ RUN rabbitmq-plugins enable --offline rabbitmq_management
 RUN rabbitmq-plugins enable --offline rabbitmq_mqtt
 RUN rabbitmq-plugins enable --offline rabbitmq_web_mqtt
 
+ENV mqtt.allow_anonymous false
+ENV mqtt.default_user admin
+ENV mqtt.default_pass Sv-q47SPot12
+
+
 # make sure the metrics collector is re-enabled (disabled in the base image for Prometheus-style metrics by default)
 RUN rm -f /etc/rabbitmq/conf.d/management_agent.disable_metrics_collector.conf
 
@@ -27,6 +32,6 @@ RUN set -eux; \
 	[ -s /usr/local/bin/rabbitmqadmin ]; \
 	chmod +x /usr/local/bin/rabbitmqadmin; \
 	apk add --no-cache python3; \
-	rabbitmqadmin --version
+	rabbitmqadmin --version \
 
 EXPOSE 15671 15672 1883

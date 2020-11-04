@@ -1,10 +1,40 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: iota-persistent-config
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: gfiwire-storage-class-ebs
+  resources:
+    requests:
+      storage: "1Gi"
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: iotagent-json
+spec:
+  type: ClusterIP
+  ports:
+  - port: 4041
+    name: tcp4041to4041
+    protocol: TCP
+    targetPort: 4041
+  selector:
+    app: iotagent-json
+
+---
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: iotagent-json-deployment
 
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: iotagent-json
@@ -15,20 +45,33 @@ spec:
     spec:
       containers:
       - name: iotagent-json
-        image: fiware/iotagent-json:1.15.0 #management-sv1:5000/scfw-iotagent-json:2.1.0-R
+        image: fiware/iotagent-json:1.15.0
 #        imagePullPolicy: Never
+        resources:
+          limits:
+            cpu: 500m
+          requests:
+            cpu: 200m
         ports:
         - containerPort: 4041
           protocol: TCP
         env:
+        - name: IOTA_AMQP_HOST
+          value: "rabbitmq"
+        - name: IOTA_AMQP_PORT
+          value: "5672"
+        - name: IOTA_AMQP_USERNAME
+          value: "admin"
+        - name: IOTA_AMQP_PASSWORD
+          value: "Sv-q47SPot12"
         - name: IOTA_MQTT_HOST
           value: "rabbitmq"
         - name: IOTA_MQTT_PORT
           value: "1883"
-#        - name: IOTA_MQTT_USERNAME
-#          value: "admin"
-#        - name: IOTA_MQTT_PASSWORD
-#          value: "Sv-q47SPot12"
+        - name: IOTA_MQTT_USERNAME
+          value: "admin"
+        - name: IOTA_MQTT_PASSWORD
+          value: "Sv-q47SPot12"
         - name: IOTA_LOG_LEVEL
           value: "INFO"
         - name: IOTA_TIMESTAMP
@@ -51,9 +94,9 @@ spec:
           value: "http://iotagent-json:4041"
         - name: IOTA_DEFAULT_RESOURCE
           value: "/iot/json"
-#        volumeMounts:
-#        - mountPath: /nas1/iotagent-json/iotajson
-#          name: persistent-config
+        volumeMounts:
+        - mountPath: /nas1/iotagent-json/iotajson
+          name: persistent-config
 #        - mountPath: /etc/localtime
 #          name: persistent-localtime
 #          readOnly: true
@@ -69,27 +112,33 @@ spec:
 #      nodeSelector:
 #        scfw.cluster.id: stdap
 
-#      volumes:
-#      - persistentVolumeClaim:
-#          claimName: nfs-pvc-iotagent-json
-#        name: persistent-config
+      volumes:
+      - persistentVolumeClaim:
+          claimName: iota-persistent-config
+        name: persistent-config
 #      - hostPath:
 #          path: /etc/localtime
 #          type: FileOrCreate
 #        name: persistent-localtime
 
 ---
-apiVersion: v1
-kind: Service
+
+apiVersion: autoscaling/v2beta2
+kind: HorizontalPodAutoscaler
 metadata:
-  name: iotagent-json
+  name: iotagent-json-hpa
 spec:
-  type: ClusterIP
-  ports:
-  - port: 4041
-    name: tcp4041to4041
-    protocol: TCP
-    targetPort: 4041
-  selector:
-    app: iotagent-json
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: iotagent-json-deployment
+  minReplicas: 3
+  maxReplicas: 5
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 75
 
