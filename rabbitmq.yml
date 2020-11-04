@@ -17,28 +17,27 @@ data:
   erlang-cookie: cmFiYml0bXEtazhzLURlbTA=
 
 ---
+## Loadbalancer type service to access RabbitMQ externally
 
-apiVersion: v1
-kind: Service
-metadata:
-  # Expose the management HTTP port on each node
-  name: rabbitmq-management
-  labels:
-    app: rabbitmq
-spec:
-  ports:
-  - port: 15672
-    name: http
-  selector:
-    app: rabbitmq
-  type: LoadBalancer # NodePort # Or LoadBalancer in production w/ proper security
+#apiVersion: v1
+#kind: Service
+#metadata:
+#  name: rabbitmq-management
+#  labels:
+#    app: rabbitmq
+#spec:
+#  ports:
+#  - port: 15672
+#    name: http
+#  selector:
+#    app: rabbitmq
+#  type: LoadBalancer # NodePort # Or LoadBalancer in production w/ proper security
 
 ---
 
 apiVersion: v1
 kind: Service
 metadata:
-  # The required headless service for StatefulSets
   name: rabbitmq
   labels:
     app: rabbitmq
