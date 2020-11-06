@@ -76,8 +76,7 @@ spec:
     spec:
       containers:
       - name: rabbitmq
-        image: avkash08/rabbitmq-mqtt:3.8.9 #rabbitmq:3.6.6-management-alpine
-#        image: avkash08/rabbitmq-mqtt:3.8.9
+        image: 868018617903.dkr.ecr.ap-south-1.amazonaws.com/rabbitmq:3.8.9
         lifecycle:
           postStart:
             exec:

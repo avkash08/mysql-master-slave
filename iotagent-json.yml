@@ -45,7 +45,7 @@ spec:
     spec:
       containers:
       - name: iotagent-json
-        image: fiware/iotagent-json:1.15.0
+        image: 868018617903.dkr.ecr.ap-south-1.amazonaws.com/iot-agent:1.15.0
 #        imagePullPolicy: Never
         resources:
           limits:

@@ -68,7 +68,7 @@ spec:
       terminationGracePeriodSeconds: 30
       containers:
         - name: mongo
-          image: mongo:3.6
+          image: 868018617903.dkr.ecr.ap-south-1.amazonaws.com/mongo:3.6
           resources:
             limits:
               cpu: 500m
@@ -85,7 +85,7 @@ spec:
             - name: mongo-persistent-storage
               mountPath: /data/db
         - name: mongo-sidecar
-          image: morphy/k8s-mongo-sidecar
+          image: 868018617903.dkr.ecr.ap-south-1.amazonaws.com/mongo:k8s-mongo-sidecar-0.4.2
           resources:
             limits:
               cpu: 500m

@@ -65,7 +65,7 @@ spec:
     spec:
       initContainers:
       - name: init-mysql
-        image: mysql:5.7
+        image: 868018617903.dkr.ecr.ap-south-1.amazonaws.com/mysql:5.7
         command:
         - bash
         - "-c"
@@ -89,7 +89,7 @@ spec:
         - name: config-map
           mountPath: /mnt/config-map
       - name: clone-mysql
-        image: gcr.io/google-samples/xtrabackup:1.0
+        image: 868018617903.dkr.ecr.ap-south-1.amazonaws.com/mysql:xtrabackup1.0
         command:
         - bash
         - "-c"
@@ -113,7 +113,7 @@ spec:
           mountPath: /etc/mysql/conf.d
       containers:
       - name: mysql
-        image: mysql:5.7
+        image: 868018617903.dkr.ecr.ap-south-1.amazonaws.com/mysql:5.7
         env:
         - name: MYSQL_ALLOW_EMPTY_PASSWORD
           value: "1"
@@ -144,7 +144,7 @@ spec:
           periodSeconds: 2
           timeoutSeconds: 1
       - name: xtrabackup
-        image: gcr.io/google-samples/xtrabackup:1.0
+        image: 868018617903.dkr.ecr.ap-south-1.amazonaws.com/mysql:xtrabackup1.0
         ports:
         - name: xtrabackup
           containerPort: 3307

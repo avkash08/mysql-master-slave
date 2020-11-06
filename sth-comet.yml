@@ -29,7 +29,7 @@ spec:
     spec:
       containers:
       - name: sth-comet
-        image: fiware/sth-comet:latest
+        image: 868018617903.dkr.ecr.ap-south-1.amazonaws.com/sth-comet:2.8.0
 #        imagePullPolicy: Never
         ports:
         - containerPort: 8666
