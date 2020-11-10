@@ -1,0 +1,97 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: quantumleap
+
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: quantumleap
+  template:
+    metadata:
+      labels:
+        app: quantumleap
+    spec:
+      containers:
+      - name: quantumleap
+        image: smartsdk/quantumleap:0.7.6
+#        imagePullPolicy: Never
+        resources:
+          limits:
+            cpu: 500m
+          requests:
+            cpu: 200m
+        ports:
+        - containerPort: 8668
+          protocol: TCP
+        env:
+        - name: CRATE_HOST
+#          value: "crate-common"
+          value: "crate-internal"
+        - name: USE_GEOCODING
+          value: "False"
+        - name: REDIS_HOST
+#          value: "redis-common"
+          value: "redis-ha-cluster-startup-redis-master-service"
+        - name: REDIS_PORT
+          value: "6379"
+#        volumeMounts:
+#        - mountPath: /etc/localtime
+#          name: persistent-localtime
+#          readOnly: true
+        livenessProbe:
+          failureThreshold: 3
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          successThreshold: 1
+          tcpSocket:
+            port: 8668
+          timeoutSeconds: 2
+
+#      nodeSelector:
+#        scfw.cluster.id: stdap
+
+#      volumes:
+#      - hostPath:
+#          path: /etc/localtime
+#          type: FileOrCreate
+#        name: persistent-localtime
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: quantumleap
+spec:
+  type: ClusterIP
+  ports:
+  - port: 8668
+    name: tcp8668to8668
+    protocol: TCP
+    targetPort: 8668
+  selector:
+    app: quantumleap
+
+---
+
+apiVersion: autoscaling/v2beta2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: quantumleap
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: quantumleap
+  minReplicas: 3
+  maxReplicas: 5
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 75
+
